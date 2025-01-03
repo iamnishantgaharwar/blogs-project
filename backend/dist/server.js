@@ -4,8 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const userRoute_1 = __importDefault(require("./routes/userRoute"));
+const userRoute_1 = __importDefault(require("./routes/userRoute/userRoute"));
+const dotenv = require('dotenv');
 const app = (0, express_1.default)();
+dotenv.config({ path: './.env' });
 // Middleware to parse JSON requests
 app.use(express_1.default.json());
 app.use('/api', userRoute_1.default);
