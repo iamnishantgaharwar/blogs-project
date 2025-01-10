@@ -7,6 +7,7 @@ import {
 } from '../../utils/responseFunction'
 import responseMessage from '../../utils/responseMessages'
 import statusCode from '../../utils/statusCode'
+import { logWithContext } from '../../utils/util'
 
 const prisma = new PrismaClient()
 
@@ -16,6 +17,7 @@ export const signupFunc = async (
 ): Promise<void> => {
   try {
     const { firstName, lastName, phone, email, password } = req.body
+    logWithContext('info', 'sign-up', 'Sign-Up Request Received')
 
     // Input validation
     if (!firstName || !email || !password) {
@@ -54,6 +56,7 @@ export const signupFunc = async (
     )
   } catch (e: any) {
     console.error('Error during signup:', e)
+    logWithContext('error', 'sign-up', e)
 
     if (e.code === 'P2002') {
       // Handle unique constraint violation error (e.g., email already exists)
