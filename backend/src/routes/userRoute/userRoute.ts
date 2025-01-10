@@ -4,6 +4,7 @@ import {
   signInFunc,
   signupFunc,
 } from '../../controller/userController/userIndex'
+import { logWithContext } from '../../utils/logger'
 
 const router = Router()
 

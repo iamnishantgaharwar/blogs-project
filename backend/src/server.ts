@@ -8,6 +8,8 @@ dotenv.config({ path: './.env' })
 // Middleware to parse JSON requests
 app.use(express.json())
 
+// Logger Middleware
+
 app.use('/api', userRoutes)
 
 app.listen(3000, () => {

@@ -7,6 +7,7 @@ import {
 } from '../../utils/responseFunction'
 import responseMessage from '../../utils/responseMessages'
 import statusCode from '../../utils/statusCode'
+import { logWithContext } from '../../utils/util'
 
 const prisma = new PrismaClient()
 
@@ -16,13 +17,13 @@ export const signupFunc = async (
 ): Promise<void> => {
   try {
     const { firstName, lastName, phone, email, password } = req.body
+    logWithContext('info', 'sign-up', 'Sign-Up Request Received')
 
     // Input validation
     if (!firstName || !email || !password) {
       res.send(
         errorResponseFunc(
           responseMessage.incompleteFields,
-          null,
           statusCode.badRequest,
           'Validation Error'
         )
@@ -50,19 +51,18 @@ export const signupFunc = async (
         responseMessage.created,
         statusCode.created,
         'Success',
-        { userId: newUser.id },
-        `${newUser.firstName} ${newUser.lastName} created`
+        { userId: newUser.id }
       )
     )
   } catch (e: any) {
     console.error('Error during signup:', e)
+    logWithContext('error', 'sign-up', e)
 
     if (e.code === 'P2002') {
       // Handle unique constraint violation error (e.g., email already exists)
       res.send(
         errorResponseFunc(
           responseMessage.exists,
-          e.message,
           statusCode.conflict,
           'Conflict Error'
         )
@@ -72,7 +72,6 @@ export const signupFunc = async (
       res.send(
         errorResponseFunc(
           responseMessage.internalServerError,
-          e.message,
           statusCode.internalServerError,
           'Internal Server Error'
         )

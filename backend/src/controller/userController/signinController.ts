@@ -8,6 +8,7 @@ import {
 } from '../../utils/responseFunction'
 import responseMessage from '../../utils/responseMessages'
 import statusCode from '../../utils/statusCode'
+import { logWithContext } from '../../utils/util'
 
 const prisma = new PrismaClient()
 
@@ -17,13 +18,12 @@ export const signInFunc = async (
 ): Promise<void> => {
   try {
     const { email, password } = req.body
-
+    logWithContext('info', 'sign-in', 'Sign-In Request Received')
     // Input validation
     if (!email || !password) {
       res.send(
         errorResponseFunc(
           responseMessage.incompleteFields,
-          null,
           statusCode.badRequest,
           'Validation Error'
         )
@@ -40,7 +40,6 @@ export const signInFunc = async (
       res.send(
         errorResponseFunc(
           responseMessage.notExist,
-          'User not found',
           statusCode.notFound,
           'User Not Found'
         )
@@ -55,7 +54,6 @@ export const signInFunc = async (
       res.send(
         errorResponseFunc(
           responseMessage.incorrectPassword,
-          'Incorrect password',
           statusCode.unauthorized,
           'Unauthorized'
         )
@@ -73,20 +71,18 @@ export const signInFunc = async (
     // Send success response with token
     res.send(
       successResponseFunc(
-        responseMessage.success,
+        'User logged in successfully',
         statusCode.success,
         'Success',
-        { token },
-        'User logged in successfully'
+        { token }
       )
     )
   } catch (e: any) {
     console.error('Error during signin:', e)
-
+    logWithContext('error', 'sign-in', e)
     res.send(
       errorResponseFunc(
         responseMessage.internalServerError,
-        e.message,
         statusCode.internalServerError,
         'Internal Server Error'
       )

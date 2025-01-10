@@ -1,32 +1,43 @@
 // Success response structure
+interface SuccessResponse {
+  status: 'success'
+  message: string
+  code: number
+  type: string
+  data: object | null
+}
+
 export const successResponseFunc = (
   message: string,
   code: number,
   type: string,
-  data: object | null,
-  details: string
-) => {
+  data: object | null
+): SuccessResponse => {
   return {
     status: 'success',
     message: message,
     code: code,
     type: type,
     data: data,
-    details: details,
   }
 }
 
 // Error response structure
+interface ErrorResponse {
+  status: 'error'
+  message: string
+  code: number
+  type: string
+}
+
 export const errorResponseFunc = (
   message: string,
-  details: string | null,
   code: number,
   type: string
-) => {
+): ErrorResponse => {
   return {
     status: 'error',
     message: message,
-    details: details,
     code: code,
     type: type,
   }
