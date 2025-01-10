@@ -22,7 +22,6 @@ export const signupFunc = async (
       res.send(
         errorResponseFunc(
           responseMessage.incompleteFields,
-          null,
           statusCode.badRequest,
           'Validation Error'
         )
@@ -50,8 +49,7 @@ export const signupFunc = async (
         responseMessage.created,
         statusCode.created,
         'Success',
-        { userId: newUser.id },
-        `${newUser.firstName} ${newUser.lastName} created`
+        { userId: newUser.id }
       )
     )
   } catch (e: any) {
@@ -62,7 +60,6 @@ export const signupFunc = async (
       res.send(
         errorResponseFunc(
           responseMessage.exists,
-          e.message,
           statusCode.conflict,
           'Conflict Error'
         )
@@ -72,7 +69,6 @@ export const signupFunc = async (
       res.send(
         errorResponseFunc(
           responseMessage.internalServerError,
-          e.message,
           statusCode.internalServerError,
           'Internal Server Error'
         )
