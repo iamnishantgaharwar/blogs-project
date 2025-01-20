@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
+import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import {
   errorResponseFunc,
@@ -37,6 +37,7 @@ export const signInFunc = async (
     })
 
     if (!user) {
+      logWithContext('error', 'sign-in', 'User Not Found')
       res.send(
         errorResponseFunc(
           responseMessage.notExist,
@@ -44,6 +45,7 @@ export const signInFunc = async (
           'User Not Found'
         )
       )
+
       return
     }
 
@@ -51,6 +53,7 @@ export const signInFunc = async (
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {
+      logWithContext('error', 'sign-in', 'Incorrect Password')
       res.send(
         errorResponseFunc(
           responseMessage.incorrectPassword,
@@ -67,6 +70,8 @@ export const signInFunc = async (
       process.env.JWT_SECRET as string, // Ensure you have a valid JWT_SECRET environment variable
       { expiresIn: '1h' } // Token expires in 1 hour
     )
+
+    logWithContext('info', 'sign-in', 'User Logged In Successfully')
 
     // Send success response with token
     res.send(
